@@ -1,0 +1,142 @@
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!--<img class="img-responsive img-rounded" src="img/fantasy.jpg">-->
+                <div class="intro-text">
+                    <div class="intro-message">
+                        <h1>清明上河圖特展</h1>
+                        <h3>北部院區 展覽區 - 210</h3>
+                        <h3>2016/04/02~2016/06/26</h3>
+                        <hr class="intro-divider"></hr>
+                        <ul class="list-inline intro-social-buttons">
+                            <li>
+                                <a smooth-scroll href="" target="about" class="btn btn-default btn-lg">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span>展覽概述</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a smooth-scroll href="" target="about-items" class="btn btn-default btn-lg">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span>展件介紹</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/xiaoming87" class="btn btn-default btn-lg">
+                                    <i class="fa fa-shopping-basket"></i>
+                                    <span>購物專區</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- about -->
+
+<section id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>展覽概述</h2>
+                <br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                本院庋藏的〈清明上河圖〉共計八卷，可區分具名為張擇端（活動於12世紀前期）者，仇英（約1494-1552）的〈清明上河圖〉，以及〈清院本清明上河圖〉三類。前兩種在結構與內容上，主要參照張擇端的〈清明上河圖〉，雖屬摹本或偽托之作，但均添入新的城市風情與時代風格，塑造迥異於宋本的新貌。
+                <br /><br />
+                北宋張擇端〈清明上河圖〉（北京故宮藏），是宋代風俗畫的鉅作，描繪北宋都城開封汴河兩岸的繁榮景象，寫實的表現手法和傳奇性的流傳過程，不僅凝聚鑑賞者和收藏家的目光，亦是藝術史學者關注與研究的課題。然眾說紛紜，莫衷一是，「清明上河學」儼然興起。歷代畫家又從不同的視角及風俗軌跡，或仿效，或複製，留存至今者難以估計，學者指稱約莫百餘卷，典藏於各大博物館及私人藏家手中，反映出〈清明上河圖〉的影響力。
+                <br /><br />
+                〈清院本清明上河圖〉由畫院陳枚（1694-1745）、孫祜、金昆、戴洪及程志道五位畫家合作，內容包羅萬象，製作精緻考究，為集各家所長之經典名作，足以媲美宋張擇端〈清明上河圖〉。至於清沈源〈清明上河圖〉，除材質、設色不同於清院本外，在畫面的鋪陳、事物、舟車與人物的安排幾無差異，體現出清宮畫院繪製長卷鉅著的運作過程。
+                <br /><br />
+                院藏〈清明上河圖〉質量均美，然鮮少全數展出，今值四月清明，特闢專室，將八件作品同時呈現世人面前，打造這場華麗的視覺饗宴，歡迎觀眾一同來領略明清兩代畫家詮釋〈清明上河圖〉的多元面向。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- about -->
+<!-- about items -->
+
+<section id="about-items">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>展件介紹</h2>
+                <br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3>{{ selectedItem.name }}</h3>
+                <img ng-src="{{ selectedItem.src }}" class="img-responsive center-block" />
+                <br />
+                <ul class="list-inline">
+                    <li ng-repeat="item in items" ng-click="selectItem(item)">
+                        <a href="">
+                            <img ng-src="{{ item.src }}" class="img-thumbnail img-responsive" style="width:200px;height:100px;">
+                        </a>
+                    </li>
+                </ul>
+                <img ng-src="{{ selectedItem.qr }}">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- about items-->
+<!-- shop -->
+
+<section id="shop">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>購物專區</h2>
+                <br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 text-center" ng-repeat="item in shopItems" style="margin-top:30px">
+                <img ng-src="{{ item.src }}" class="img-thumbnail img-responsive" style="width:300px;height:300px;">
+                <br />
+                <div style="margin-bottom:5px;">{{ item.name }} ${{ item.price | number }}</div>
+                
+                <!-- model: 不直接綁定storage裡面的購物車，改綁定另一個參數，add的時候再加上去；-->
+                <!-- disabled: 當購物車裡面有數量的時候就不能再更改 -->
+                <input type="number"
+                       ng-model="shoppingCartQuantity[$index]"
+                       ng-disabled="shoppingCart[$index].quantity"
+                       class="form-control center-block"
+                       style="max-width:100px;margin-bottom: 10px;"
+                       min="1"
+                       placeholder="數量(Quantity)">
+                
+                <!-- not add -->
+                <button class="btn btn-info btn-lg" ng-click="addShopItem(item, $index)" ng-if="!isInShop(item)" >
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>加入購物車</span>
+                </button>
+                <!-- added -->
+                <button class="btn btn-danger btn-lg" ng-click="removeShopItem(item, $index)" ng-if="isInShop(item)">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>從購物車中刪除</span>
+                </button>
+            </div>
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 text-center" style="margin-top:20px">
+                <h3>結帳QR code</h3>
+            </div>
+            <div class="col-lg-4"></div>
+            <div class="col-lg-12 text-center" style="margin-top:20px">
+                <qr text="checkoutQR().text" type-number="checkoutQR().typeNumber" correction-level="checkoutQR().correctionLevel" size="checkoutQR().size" input-mode="checkoutQR().inputMode" image="checkoutQR().image" ></qr>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- shop -->

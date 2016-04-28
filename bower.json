@@ -1,0 +1,23 @@
+{
+  "name": "my-bower-angular1-gulp",
+  "description": "my-bower-angular1-gulp",
+  "main": "gulpfile.js",
+  "authors": [
+    "dingzhengru"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/dingzhengru/my-bower-angular1-gulp",
+  "private": true,
+  "devDependencies": {
+    "angularfire": "^1.2.0",
+    "bootstrap-social": "^4.12.0",
+    "font-awesome": "^4.6.1",
+    "angular-ui-router": "^0.2.18",
+    "angular-qr": "^0.2.0",
+    "angular-qr-scanner": "^0.1.0",
+    "angular-cookies": "^1.5.5",
+    "moment": "^2.13.0",
+    "ngstorage": "^0.3.10",
+    "angular-smoothscroll": "^1.1.1"
+  }
+}

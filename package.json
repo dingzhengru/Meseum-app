@@ -1,0 +1,35 @@
+{
+  "name": "my-bower-angular1-gulp",
+  "version": "1.0.0",
+  "description": "my-bower-angular1-gulp",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "angular-qrcode": "^6.2.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-2": "^6.5.0",
+    "body-parser": "^1.15.0",
+    "browser-sync": "^2.11.1",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.3",
+    "multer": "^1.1.0",
+    "systemjs": "^0.19.26"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dingzhengru/my-bower-angular1-gulp.git"
+  },
+  "author": "dingzhengru",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dingzhengru/my-bower-angular1-gulp/issues"
+  },
+  "homepage": "https://github.com/dingzhengru/my-bower-angular1-gulp#readme"
+}

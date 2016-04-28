@@ -1,0 +1,77 @@
+<!-- manifest檔案 會告訴那些檔案要cache住 那些不要(避免與server資料不同步) -->
+<!--
+    CACHE MANIFEST 要Cache的檔案寫在這
+    NEWORK         不要Cache的檔案寫在這
+    FALLBACK       判斷是否連線，並且指定要用哪個檔案()
+    
+    EX: demo.appcache
+-->
+<!-- <html manifest="demo.appcache"> -->
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" ng-controller="MainController">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pageTitle }} | XiaoMing's webmobile</title>
+    
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+    
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <!-- bootstrap-social -->
+    <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
+    
+    <!-- bootstrap custom theem -->
+    <link rel="stylesheet" href="css/bootstrap-freelancer.css">
+
+    <!-- my style -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div ng-include src="templates.nav"></div>
+    
+    <div class="wrapper" ui-view></div>
+    
+    <div ng-include src="templates.footer"></div>
+    <!-- SystemJs -->
+    <script src="node_modules/systemjs/dist/system.js"></script>
+    
+    <!-- Jquery -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Firebase -->
+    <script src="bower_components/firebase/firebase.js"></script>
+    
+    <!-- Angular -->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angularfire/dist/angularfire.min.js"></script>
+    <!--<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>-->
+    <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="bower_components/angular-smoothscroll/dist/scripts/bb15da28.scripts.js"></script>
+    
+    <!-- QR reader -->
+    <script src="bower_components/qrcode/lib/qrcode.min.js"></script>
+    <script src="bower_components/angular-qr/angular-qr.min.js"></script>
+    
+    <!-- QR scanner -->
+    <script src="bower_components/angular-qr-scanner/qr-scanner.js"></script>
+    <script src="bower_components/angular-qr-scanner/src/jsqrcode-combined.min.js"></script>
+
+    <!-- Moment(Date Library) -->
+    <!--<script src="bower_components/moment/min/moment-with-locales.min.js"></script>-->
+
+    <script>
+        System.config({
+            baseURL: '/'
+        });
+        System.import('modules/app.js');
+    </script>
+</body>
+</html>
