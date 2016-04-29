@@ -24,6 +24,8 @@ angular.module('qrScanner', ["ng"]).directive('qrScanner', ['$interval', '$windo
       video.setAttribute('width', width);
       video.setAttribute('height', height);
       video.setAttribute('style', '-moz-transform:rotateY(-180deg);-webkit-transform:rotateY(-180deg);transform:rotateY(-180deg);');
+      // i set it
+      // video.setAttribute('autoplay','');
       var canvas = $window.document.createElement('canvas');
       canvas.setAttribute('id', 'qr-canvas');
       canvas.setAttribute('width', width);
@@ -71,6 +73,7 @@ angular.module('qrScanner', ["ng"]).directive('qrScanner', ['$interval', '$windo
       element.bind('$destroy', function() {
         if ($window.localMediaStream) {
           $window.localMediaStream.stop();
+          // $window.localMediaStream.getVideoTracks()[0].stop();
         }
         if (stopScan) {
           $interval.cancel(stopScan);

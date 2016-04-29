@@ -16,7 +16,15 @@ var ref = new Firebase('https://scorching-inferno-8541.firebaseio.com');
 var demoRef = ref.child('demo');
 var userRef = ref.child('users');
 
-var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', 'ja.qr', 'qrScanner', 'angularSmoothscroll']).config(function ($stateProvider, $urlRouterProvider) {
+var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', 'ja.qr', 'qrScanner', 'angularSmoothscroll'])
+
+// Filter
+.filter('str', function () {
+    return function (input) {
+        input = input || 0;
+        return input.toString(10);
+    };
+}).config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider.state('home', {
         url: '/',
         templateUrl: 'templates/home.html',
@@ -95,10 +103,32 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
     }).state('detail', {
         url: '/detail/{itemId:int}',
         templateUrl: 'templates/detail.html',
-        controller: function controller($scope, $stateParams) {
+        controller: function controller($scope, $stateParams, $http) {
             $scope.setPageTitle('Detail');
 
-            $scope.itemId = $stateParams.itemId;
+            $scope.item = { id: $stateParams.itemId };
+            $http.get('https://my-webmobile-dingzhengru.c9users.io:8081/meseumItems/all').success(function (data) {
+                $scope.items = data;
+                var index = $scope.arrayObjectIndexOf(data, $scope.item, 'id');
+                $scope.item = $scope.items[index];
+                console.log($scope.item);
+            });
+        }
+    }).state('detail-scanner', {
+        url: '/detail-scanner',
+        templateUrl: 'templates/detail-scanner.html',
+        controller: function controller($scope, $state, $window, $timeout) {
+            $scope.setPageTitle('QR Scanner(Detail)');
+
+            $scope.onSuccess = function (data) {
+                $state.go('detail', { itemId: parseInt(data) });
+                $timeout(function () {
+                    return $window.location.reload();
+                }, 500);
+            };
+            $scope.onError = function (error) {
+                console.error(error);
+            };
         }
     }).state('check-scanner', {
         url: '/check-scanner',
@@ -151,13 +181,8 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
                 console.log(error);
             };
         }
-    }).state('detail-scanner', {
-        url: '/detail-scanner',
-        templateUrl: 'templates/detail-scanner.html',
-        controller: function controller($scope) {
-            $scope.setPageTitle('QR Scanner(Detail)');
-        }
     });
+
     $urlRouterProvider.otherwise('/');
 }).controller('MainController', function ($scope, $http, $location, $firebaseObject, $firebaseArray) {
     $scope.setPageTitle = function (pageTitle) {

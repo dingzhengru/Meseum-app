@@ -83,7 +83,8 @@
                         </a>
                     </li>
                 </ul>
-                <img ng-src="{{ selectedItem.qr }}">
+                <!--<img ng-src="{{ selectedItem.qr }}">-->
+                <qr text="selectedItem.id.toString() || '0'" type-number="0" size="200" image="true" ></qr>
             </div>
         </div>
     </div>
