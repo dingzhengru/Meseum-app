@@ -28,7 +28,7 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
     $stateProvider.state('home', {
         url: '/',
         templateUrl: 'templates/home.html',
-        controller: function controller($scope, $http, $location, $localStorage, $anchorScroll) {
+        controller: function controller($scope, $http, $location, $localStorage, $anchorScroll, $timeout) {
             $scope.setPageTitle('Home');
 
             // ----------------- About Section
@@ -36,7 +36,7 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
             // ----------------- About Section -/
             // ----------------- About-items Section
 
-            $http.get('https://my-webmobile-dingzhengru.c9users.io:8081/meseumItems/all').success(function (data) {
+            $http.get('https://my-webmobile-dingzhengru.c9users.io:8080/meseumItems/all').success(function (data) {
                 $scope.items = data;
                 $scope.selectedItem = $scope.items[0];
             });
@@ -47,8 +47,21 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
             // ----------------- About-items Section -/
             // ----------------- Shop Section
 
-            $http.get('https://my-webmobile-dingzhengru.c9users.io:8081/shopItems/all').success(function (data) {
+            $http.get('https://my-webmobile-dingzhengru.c9users.io:8080/shopItems/all').success(function (data) {
                 $scope.shopItems = data;
+                // 從Storage拿出數量 // storage 跟 原data比較 // index為原data位置 i為storage位置
+
+                var _loop = function _loop(i) {
+                    $scope.shopItems.forEach(function (item, index) {
+                        if (item.id == $localStorage.shoppingCart[i].id) {
+                            $scope.shoppingCartQuantity[index] = $localStorage.shoppingCart[i].quantity;
+                        }
+                    });
+                };
+
+                for (var i = 0; i < $localStorage.shoppingCart.length; i++) {
+                    _loop(i);
+                }
             });
 
             // Init $localStorage
@@ -60,9 +73,16 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
             $scope.shoppingCart = $localStorage.shoppingCart;
 
             // 從Storage拿出數量
-            for (var i = 0; i < $localStorage.shoppingCart.length; i++) {
-                $scope.shoppingCartQuantity[i] = $localStorage.shoppingCart[i].quantity;
-            }$scope.isInShop = function (shopItem) {
+            // for(let i=0; i<$localStorage.shoppingCart.length; i++) {
+            //     $scope.shopItems.forEach((item, index) => {
+            //         if(item.id == $localStorage.shoppingCart[i].id) {
+            //             $scope.shoppingCartQuantity[index] = $localStorage.shoppingCart[index].quantity;
+            //         }
+            //     });
+            // }
+            // $scope.shoppingCartQuantity[i] = $localStorage.shoppingCart[i].quantity;
+
+            $scope.isInShop = function (shopItem) {
                 return $scope.arrayObjectIndexOf($localStorage.shoppingCart, shopItem, 'id') >= 0;
             };
             $scope.addShopItem = function (shopItem, index) {
@@ -107,7 +127,7 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
             $scope.setPageTitle('Detail');
 
             $scope.item = { id: $stateParams.itemId };
-            $http.get('https://my-webmobile-dingzhengru.c9users.io:8081/meseumItems/all').success(function (data) {
+            $http.get('https://my-webmobile-dingzhengru.c9users.io:8080/meseumItems/all').success(function (data) {
                 $scope.items = data;
                 var index = $scope.arrayObjectIndexOf(data, $scope.item, 'id');
                 $scope.item = $scope.items[index];
@@ -133,52 +153,85 @@ var mainApp = angular.module('mainApp', ['ui.router', 'ngStorage', 'firebase', '
     }).state('check-scanner', {
         url: '/check-scanner',
         templateUrl: 'templates/check-scanner.html',
-        controller: function controller($scope, $http) {
+        controller: function controller($scope, $http, $window) {
             $scope.setPageTitle('QR Scanner(check)');
 
-            $scope.shopItemList = JSON.parse('[[3415149900017, 7500200100140, 3403479900869], [20, 18, 15]]');
-            $scope.shopItemIdList = $scope.shopItemList[0];
-            $scope.shopItemQuantityList = $scope.shopItemList[1];
-            $http.get('https://my-webmobile-dingzhengru.c9users.io:8081/shopItems/all').success(function (data) {
-                $scope.shopItems = data.filter(function (item, index) {
-                    for (var i = 0; i < $scope.shopItemIdList.length; i++) {
-                        if ($scope.shopItemIdList[i] == item.id) {
-                            // 將數量加上去
-                            item.quantity = $scope.shopItemQuantityList[i];
-                            return true;
-                        }
+            //------------- Shake
+
+            $scope.orientation = {};
+            $scope.shake = {
+                deltaTime: 0, // 現在與最後一次的差距時間(毫秒)
+                currentTime: new Date(), // 現在的timestamp(毫秒)
+                lastTime: new Date(), // 最後的timestamp(毫秒)
+                settings: {
+                    delta: 5, // 判斷搖動大小設定
+                    timeout: 1000 }
+            };
+
+            // 多久判斷一次
+            $scope.detactShake = function (event) {
+                $scope.shake.currentTime = new Date();
+                $scope.shake.deltaTime = $scope.shake.currentTime.getTime() - $scope.shake.lastTime.getTime();
+
+                if ($scope.shake.deltaTime >= $scope.shake.settings.timeout || !$scope.orientation) {
+
+                    // 現在 - 最後一次 >= 設定的大小
+                    if (Math.abs($scope.orientation.x - event.accelerationIncludingGravity.x) >= $scope.shake.settings.delta && Math.abs($scope.orientation.y - event.accelerationIncludingGravity.y) >= $scope.shake.settings.delta && Math.abs($scope.orientation.z - event.accelerationIncludingGravity.z) >= $scope.shake.settings.delta) {
+                        $scope.shake.isShake = true;
+                        $scope.detactShakeStop();
+                        $scope.detactShakeReset();
                     }
-                    return false;
+
+                    $scope.orientation.x = Math.round(event.accelerationIncludingGravity.x);
+                    $scope.orientation.y = Math.round(event.accelerationIncludingGravity.y);
+                    $scope.orientation.z = Math.round(event.accelerationIncludingGravity.z);
+
+                    $scope.shake.lastTime = new Date();
+                }
+            };
+
+            $scope.detactShakeStart = function () {
+                return window.addEventListener('devicemotion', $scope.detactShake);
+            };
+            $scope.detactShakeStop = function () {
+                return window.removeEventListener('devicemotion', $scope.detactShake);
+            };
+            $scope.detactShakeReset = function () {
+                return $scope.orientation = {};
+            };
+
+            if ('ondevicemotion' in window) $scope.detactShakeStart();
+
+            //------------- Shake -----------//
+
+            $scope.onSuccess = function (data) {
+                $scope.shopItemList = JSON.parse(data);
+                $scope.shopItemIdList = $scope.shopItemList[0];
+                $scope.shopItemQuantityList = $scope.shopItemList[1];
+                $http.get('https://my-webmobile-dingzhengru.c9users.io:8080/shopItems/all').success(function (data) {
+                    $scope.shopItems = data.filter(function (item, index) {
+                        for (var i = 0; i < $scope.shopItemIdList.length; i++) {
+                            if ($scope.shopItemIdList[i] == item.id) {
+                                // 將數量加上去
+                                item.quantity = $scope.shopItemQuantityList[i];
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    console.log($scope.shopItems);
                 });
-                console.log($scope.shopItems);
-            });
+            };
+            $scope.onError = function (error) {
+                console.log('QR Error:', error);
+            };
+
             $scope.shopSum = function () {
+                if (!$scope.shopItems) return 0;
                 var sum = 0;
                 for (var i = 0; i < $scope.shopItems.length; i++) {
                     sum = sum + $scope.shopItems[i].quantity * $scope.shopItems[i].price;
                 }return sum;
-            };
-
-            // $scope.onSuccess = function(data) {
-            //     $scope.shopItemList = JSON.parse(data);
-            //     $scope.shopItemIdList = $scope.shopItemList[0];
-            //     $scope.shopItemQuantityList = $scope.shopItemList[1];
-            //     $http.get('http://my-webmobile-dingzhengru.c9users.io:8081/shopItems/all').success((data) => {
-            //             $scope.shopItems = data.filter((item, index) => {
-            //                 for(let i=0; i<$scope.shopItemIdList.length; i++) {
-            //                     if($scope.shopItemIdList[i] == item.id) {
-            //                         // 將數量加上去
-            //                         item.quantity = $scope.shopItemQuantityList[i];
-            //                         return true;
-            //                     }
-            //                 }
-            //                 return false;
-            //             });
-            //             console.log($scope.shopItems);
-            //     });
-            // };
-            $scope.onError = function (error) {
-                console.log(error);
             };
         }
     });

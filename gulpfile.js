@@ -33,19 +33,9 @@ gulp.task('browser-sync', function() {
     browserSync.init({
         server: {
             baseDir: "./", 
-            index: "index.html",
-            middleware: [
-                function (request, response, next) {
-                    console.log("first middleware");
-                    next();
-                },
-                function (request, response, next) {
-                    console.log("second middleware");
-                    next();
-                }
-            ],  
+            index: "index.html" 
         },
-        port: 8080, 
+        port: 8081, 
         ui: false,
         open: false
     });

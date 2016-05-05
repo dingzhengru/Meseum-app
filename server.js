@@ -19,7 +19,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // static middleware
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/')));
 
 // app.post('/profile', upload.array(), function (request, response, next) {
 //     console.log(request.body);
@@ -94,15 +94,14 @@ app.get('/shopItems/all', function(request, response) {
 });
 
 app.get('*', function(request, response) {
-    // response.sendFile(__dirname + '/public/index.html');
-    response.send('');
+    response.sendFile(__dirname + '/index.html');
 });
 
-var port = 8081 || '3000';
+var port = 8080 || '3000';
 var host = process.env.C9_HOSTNAME || process.env.HOSTNAME || 'localhost';
 
 server.listen(port, function() {
-   console.log('server is running on', host, port); 
+   console.log('server is running on', 'http://' + host + ':' + port); 
 });
 
 // ----------------------------------/ express

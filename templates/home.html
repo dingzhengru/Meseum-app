@@ -111,7 +111,7 @@
                 <!-- disabled: 當購物車裡面有數量的時候就不能再更改 -->
                 <input type="number"
                        ng-model="shoppingCartQuantity[$index]"
-                       ng-disabled="shoppingCart[$index].quantity"
+                       ng-disabled="isInShop(item)"
                        class="form-control center-block"
                        style="max-width:100px;margin-bottom: 10px;"
                        min="1"

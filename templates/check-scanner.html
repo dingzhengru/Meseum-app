@@ -28,10 +28,27 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>{{ shopSum() | number }}</td>
+                    <td>{{ shopSum() | number}}</td>
                 </tr>
             </table>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <!--{{ orientation.alpha }} <br />-->
+            <!--{{ orientation.beta }} <br />-->
+            <!--{{ orientation.gamma }} <br />-->
+            {{ orientation.x }} <br />
+            {{ orientation.y }} <br />
+            {{ orientation.z }} <br />
+            
+            <p ng-show="shake.isShake">Shake</p>
+        </div>
+    </div>
+    <div class="row">
+        <span ng-repeat="log in logs">
+            {{ log }} <br />
+        </span>
     </div>
 </div>
 
